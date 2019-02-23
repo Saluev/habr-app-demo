@@ -4,8 +4,8 @@
   "description": "This is an app demo for Habr article.",
   "main": "index.js",
   "scripts": {
-    "build": "echo 'build'",
-    "start": "node index.js",
+    "build": "webpack",
+    "start": "node /app/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +19,17 @@
   },
   "homepage": "https://github.com/Saluev/habr-app-demo#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.5",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
   }
 }
