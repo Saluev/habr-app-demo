@@ -1,0 +1,11 @@
+.git
+.idea
+.logs
+.pytest_cache
+backend
+worker
+tools
+node_modules
+npm-debug
+tests
+venv

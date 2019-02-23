@@ -1,0 +1,9 @@
+*.pyc
+*.pyo
+.idea
+.logs/*.log
+frontend/assets/js
+frontend/node_modules
+frontend/package-lock.json
+frontend/views
+venv
