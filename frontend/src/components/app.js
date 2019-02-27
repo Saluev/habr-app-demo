@@ -1,10 +1,26 @@
 import React, {Component} from 'react'
+import {connect} from "react-redux";
+
+import CardPage from "./cardPage"
 
 class App extends Component {
 
     render() {
-        return <h1>Hello, world!</h1>
+        const {pageType} = this.props;
+        return (
+            <div>
+                {pageType === "card" && <CardPage/>}
+            </div>
+        );
     }
 }
 
-export default App
+function mapStateToProps(state) {
+    const {page} = state;
+    const {type} = page;
+    return {
+        pageType: type
+    };
+}
+
+export default connect(mapStateToProps)(App);
