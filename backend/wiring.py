@@ -2,6 +2,8 @@ import os
 
 from pymongo import MongoClient
 from pymongo.database import Database
+import redis
+import rq
 
 import backend.dev_settings
 from backend.storage.card import CardDAO
@@ -22,3 +24,11 @@ class Wiring(object):
             port=self.settings.MONGO_PORT)
         self.mongo_database: Database = self.mongo_client[self.settings.MONGO_DATABASE]
         self.card_dao: CardDAO = MongoCardDAO(self.mongo_database)
+
+        self.redis: redis.Redis = redis.StrictRedis(
+            host=self.settings.REDIS_HOST,
+            port=self.settings.REDIS_PORT,
+            db=self.settings.REDIS_DB)
+        self.task_queue: rq.Queue = rq.Queue(
+            name=self.settings.TASK_QUEUE_NAME,
+            connection=self.redis)
