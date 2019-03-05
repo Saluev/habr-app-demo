@@ -1,5 +1,6 @@
 export const START_FETCHING_CARD = "START_FETCHING_CARD";
 export const FINISH_FETCHING_CARD = "FINISH_FETCHING_CARD";
+export const NAVIGATE = "NAVIGATE";
 
 function apiPath() {
     return "http://localhost:40001/api/v1";
@@ -35,4 +36,17 @@ export function fetchCardIfNeeded() {
             return dispatch(fetchCard());
         }
     };
+}
+
+export function navigate(link, dontPushState) {
+    if (!dontPushState) {
+        history.pushState({
+            pathname: link.pathname,
+            href: link.href
+        }, "", link.href);
+    }
+    return {
+        type: NAVIGATE,
+        path: link.pathname
+    }
 }

@@ -10,6 +10,10 @@ class CardPage extends Component {
         this.props.dispatch(fetchCardIfNeeded())
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        this.props.dispatch(fetchCardIfNeeded())
+    }
+
     render() {
         const {isFetching, cardData} = this.props;
         return (
