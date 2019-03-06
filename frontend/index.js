@@ -10,10 +10,17 @@ app.get("*", (req, res) => {
     const initialState = {
         page: {
             type: "home"
-        }
+        },
+        promises: []
     };
-    const {content, preloadedState} = render(initialState, {pathname: req.url});
-    res.send(template("Habr demo app", preloadedState, content));
+    render(initialState, {pathname: req.url}).then(result => {
+        const {content, preloadedState} = result;
+        const response = template("Habr demo app", preloadedState, content);
+        res.send(response);
+    }, (reason) => {
+        console.log(reason);
+        res.status(500).send("Server side rendering failed!");
+    });
 });
 
 app.listen(process.env.APP_FRONTEND_PORT);

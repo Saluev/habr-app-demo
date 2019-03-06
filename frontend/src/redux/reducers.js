@@ -1,4 +1,6 @@
 import {
+    ADD_PROMISE,
+    REMOVE_PROMISE,
     START_FETCHING_CARD,
     FINISH_FETCHING_CARD,
     NAVIGATE
@@ -21,6 +23,16 @@ function navigate(state, path) {
 
 export default function root(state = {}, action) {
     switch (action.type) {
+        case ADD_PROMISE:
+            return {
+                ...state,
+                promises: [...state.promises, action.promise]
+            };
+        case REMOVE_PROMISE:
+            return {
+                ...state,
+                promises: state.promises.filter(p => p !== action.promise)
+            };
         case START_FETCHING_CARD:
             return {
                 ...state,

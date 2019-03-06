@@ -1,6 +1,8 @@
 import {isServerSide} from "../utility";
 import fetch from "cross-fetch";
 
+export const ADD_PROMISE = "ADD_PROMISE";
+export const REMOVE_PROMISE = "REMOVE_PROMISE";
 export const START_FETCHING_CARD = "START_FETCHING_CARD";
 export const FINISH_FETCHING_CARD = "FINISH_FETCHING_CARD";
 export const NAVIGATE = "NAVIGATE";
@@ -10,6 +12,20 @@ function apiPath() {
         return "http://backend:40001/api/v1";
     }
     return "http://localhost:40001/api/v1";
+}
+
+function addPromise(promise) {
+    return {
+        type: ADD_PROMISE,
+        promise: promise
+    };
+}
+
+function removePromise(promise) {
+    return {
+        type: REMOVE_PROMISE,
+        promise: promise,
+    };
 }
 
 function startFetchingCard() {
@@ -29,9 +45,13 @@ function fetchCard() {
     return (dispatch, getState) => {
         dispatch(startFetchingCard());
         let url = apiPath() + "/card/" + getState().page.cardSlug;
-        return fetch(url)
+        let promise = fetch(url)
             .then(response => response.json())
-            .then(json => dispatch(finishFetchingCard(json)));
+            .then(json => {
+                dispatch(finishFetchingCard(json));
+                dispatch(removePromise(promise));
+            });
+        return dispatch(addPromise(promise));
     };
 }
 
