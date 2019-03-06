@@ -1,4 +1,4 @@
-export default function template(title) {
+export default function template(title, initialState, content) {
     let page = `
         <!DOCTYPE html>
         <html lang="en">
@@ -7,7 +7,10 @@ export default function template(title) {
                 <title>${title}</title>
             </head>
             <body>
-                <div id="app"></div>
+                <div id="app">${content}</div>
+                <script>
+                   window.__STATE__ = ${JSON.stringify(initialState)}
+                </script>
                 <script src="/dist/client.js"></script>
             </body>
         </html>

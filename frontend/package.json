@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Saluev/habr-app-demo#readme",
   "dependencies": {
+    "cross-fetch": "^3.0.1",
     "express": "^4.16.3",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
