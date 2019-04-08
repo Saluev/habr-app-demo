@@ -11,18 +11,18 @@ class MongoNotFound(Exception):
 
 
 class MongoDAO(object, metaclass=abc.ABCMeta):
+
     @property
     @abc.abstractmethod
     def collection(self) -> Collection:
         pass
 
-    @classmethod
+    @property
     @abc.abstractmethod
-    def object_class(cls) -> type:
+    def object_class(self) -> type:
         pass
 
-    @classmethod
-    def to_bson(cls, obj):
+    def to_bson(self, obj):
         result = {
             k: v
             for k, v in obj.__dict__.items()
@@ -32,10 +32,9 @@ class MongoDAO(object, metaclass=abc.ABCMeta):
             result["_id"] = bson.ObjectId(result.pop("id"))
         return result
 
-    @classmethod
-    def from_bson(cls, document):
+    def from_bson(self, document):
         document["id"] = str(document.pop("_id"))
-        return cls.object_class()(**document)
+        return self.object_class(**document)
 
     def create(self, obj):
         obj.id = str(self.collection.insert_one(self.to_bson(obj)).inserted_id)

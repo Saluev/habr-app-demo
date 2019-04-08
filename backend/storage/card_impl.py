@@ -15,9 +15,7 @@ class MongoCardDAO(MongoDAO, CardDAO):
     def collection(self) -> Collection:
         return self.mongo_database["cards"]
 
-    @classmethod
-    def object_class(cls) -> type:
-        return Card
+    object_class = Card
 
     def get_by_slug(self, slug: str) -> Card:
         return self._get_by_query({"slug": slug})
