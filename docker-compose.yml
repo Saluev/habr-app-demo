@@ -4,6 +4,19 @@ services:
     image: "mongo:latest"
   redis:
     image: "redis:alpine"
+    command: redis-server /data/redis.conf
+    volumes:
+      - ./redis.conf:/data/redis.conf
+  gameserver:
+    build:
+      context: .
+      dockerfile: ./docker/gameserver/Dockerfile
+    environment:
+      - APP_ENV=dev
+    depends_on:
+      - redis
+    volumes:
+      - .:/code
   backend:
     build:
       context: .

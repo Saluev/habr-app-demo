@@ -3,10 +3,21 @@ import {
     REMOVE_PROMISE,
     START_FETCHING_CARD,
     FINISH_FETCHING_CARD,
-    NAVIGATE
+    NAVIGATE,
+    FINISH_CREATING_SESSION,
+    FINISH_JOINING_ROOM,
+    HANDLE_EVENT_STREAM_EVENT
 } from "./actions";
 
 function navigate(state, path) {
+    if (path === "/") {
+        return {
+            ...state,
+            page: {
+                type: "game"
+            }
+        }
+    }
     let m = /^\/card\/([^/]+)$/.exec(path);
     if (m !== null) {
         return {
@@ -50,6 +61,39 @@ export default function root(state = {}, action) {
                     cardData: action.cardData
                 }
             };
+        case FINISH_CREATING_SESSION:
+            return {
+                ...state,
+                page: {
+                    ...state.page,
+                    session: action.sessionData
+                }
+            };
+        case FINISH_JOINING_ROOM:
+            return {
+                ...state,
+                page: {
+                    ...state.page,
+                    room: action.roomData
+                }
+            };
+        case HANDLE_EVENT_STREAM_EVENT:
+            if (action.event.kind === "state" && state.page.session.id === action.sessionId) {
+                let gameState = {...action.event};
+                delete gameState.kind;
+                return {
+                    ...state,
+                    page: {
+                        ...state.page,
+                        room: {
+                            ...state.page.room,
+                            state: gameState
+                        }
+                    }
+                }
+            }
+            console.warn("Ignoring event stream event:", action.event);
+            return state;
         case NAVIGATE:
             return navigate(state, action.path)
     }

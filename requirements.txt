@@ -1,3 +1,4 @@
+aioredis
 flask
 flask-cors
 gevent
@@ -5,4 +6,7 @@ gunicorn
 mistune
 pymongo
 redis
+pytest
+pytest-asyncio
+python-redis-lock
 rq

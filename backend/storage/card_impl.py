@@ -2,7 +2,7 @@ from pymongo.collection import Collection
 from pymongo.database import Database
 
 from backend.storage.card import Card, CardDAO, CardNotFound
-from backend.storage.mongo_dao import MongoDAO, MongoNotFound
+from backend.storage.mongo_dao import MongoDAO
 
 
 class MongoCardDAO(MongoDAO, CardDAO):
@@ -17,11 +17,7 @@ class MongoCardDAO(MongoDAO, CardDAO):
 
     object_class = Card
 
+    not_found_exception = CardNotFound
+
     def get_by_slug(self, slug: str) -> Card:
         return self._get_by_query({"slug": slug})
-
-    def _get_by_query(self, query):
-        try:
-            return super()._get_by_query(query)
-        except MongoNotFound:
-            raise CardNotFound

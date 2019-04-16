@@ -1,0 +1,13 @@
+.checkers-cell {
+  display: inline-block;
+  min-width: 1rem;
+  min-height: 1rem;
+}
+
+.checkers-row {
+  display: table-row;
+}
+
+.checkers-field {
+  border: 1px solid gray;
+}

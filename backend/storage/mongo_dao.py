@@ -6,10 +6,6 @@ import bson.errors
 from pymongo.collection import Collection
 
 
-class MongoNotFound(Exception):
-    pass
-
-
 class MongoDAO(object, metaclass=abc.ABCMeta):
 
     @property
@@ -22,18 +18,31 @@ class MongoDAO(object, metaclass=abc.ABCMeta):
     def object_class(self) -> type:
         pass
 
-    def to_bson(self, obj):
+    @property
+    @abc.abstractmethod
+    def not_found_exception(self) -> type:
+        pass
+
+    def to_bson_middleware(self, document: dict) -> dict:
+        if "id" in document:
+            document["_id"] = bson.ObjectId(document.pop("id"))
+        return document
+
+    def to_bson(self, obj) -> dict:
         result = {
             k: v
             for k, v in obj.__dict__.items()
             if v is not None
         }
-        if "id" in result:
-            result["_id"] = bson.ObjectId(result.pop("id"))
+        result = self.to_bson_middleware(result)
         return result
 
-    def from_bson(self, document):
+    def from_bson_middleware(self, document: dict) -> dict:
         document["id"] = str(document.pop("_id"))
+        return document
+
+    def from_bson(self, document: dict):
+        document = self.from_bson_middleware(document)
         return self.object_class(**document)
 
     def create(self, obj):
@@ -58,5 +67,5 @@ class MongoDAO(object, metaclass=abc.ABCMeta):
     def _get_by_query(self, query):
         document = self.collection.find_one(query)
         if document is None:
-            raise MongoNotFound()
+            raise self.not_found_exception()
         return self.from_bson(document)

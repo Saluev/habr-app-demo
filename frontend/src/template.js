@@ -5,6 +5,7 @@ export default function template(title, initialState, content) {
             <head>
                 <meta charset="utf-8">
                 <title>${title}</title>
+                <link rel="stylesheet" href="/dist/client.css"/>
             </head>
             <body>
                 <div id="app">${content}</div>
