@@ -11,11 +11,20 @@ app.get("*", (req, res) => {
         page: {
             type: "home"
         },
-        promises: []
+        promises: [],
+        cookie: req.headers.cookie,
+        cookieToSet: [],
     };
     render(initialState, {pathname: req.url}).then(result => {
         const {content, preloadedState} = result;
         const response = template("Habr demo app", preloadedState, content);
+        const cookieToSet = preloadedState.cookieToSet;
+        delete preloadedState.cookie;
+        delete preloadedState.cookieToSet;
+        for (let c of cookieToSet) {
+            res.set("Set-Cookie", c);
+        }
+
         res.send(response);
     }, (reason) => {
         console.log(reason);

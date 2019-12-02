@@ -1,6 +1,7 @@
 import {isServerSide} from "../utility";
-import fetch from "cross-fetch";
+import fetch from "./fetch";
 
+export const SET_COOKIE = "SET_COOKIE";
 export const ADD_PROMISE = "ADD_PROMISE";
 export const REMOVE_PROMISE = "REMOVE_PROMISE";
 export const START_FETCHING_CARD = "START_FETCHING_CARD";
@@ -45,7 +46,7 @@ function fetchCard() {
     return (dispatch, getState) => {
         dispatch(startFetchingCard());
         let url = apiPath() + "/card/" + getState().page.cardSlug;
-        let promise = fetch(url)
+        let promise = fetch(url, {}, dispatch, getState)
             .then(response => response.json())
             .then(json => {
                 dispatch(finishFetchingCard(json));
