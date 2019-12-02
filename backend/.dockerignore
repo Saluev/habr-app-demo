@@ -2,7 +2,6 @@
 .idea
 .logs
 .pytest_cache
-frontend
 tests
 venv
 *.pyc

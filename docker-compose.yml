@@ -6,8 +6,8 @@ services:
     image: "redis:alpine"
   backend:
     build:
-      context: .
-      dockerfile: ./docker/backend/Dockerfile
+      context: backend
+      dockerfile: Dockerfile.backend
     environment:
       - APP_ENV=dev
     depends_on:
@@ -16,11 +16,11 @@ services:
     ports:
       - "40001:40001"
     volumes:
-     - .:/code
+     - ./backend:/code
   frontend:
     build:
-      context: .
-      dockerfile: ./docker/frontend/Dockerfile
+      context: frontend
+      dockerfile: Dockerfile
     environment:
       - APP_ENV=dev
       - APP_BACKEND_URL=backend:40001
@@ -33,12 +33,12 @@ services:
       - ./frontend:/app/src
   worker:
     build:
-      context: .
-      dockerfile: ./docker/worker/Dockerfile
+      context: backend
+      dockerfile: Dockerfile.worker
     environment:
       - APP_ENV=dev
     depends_on:
      - mongo
      - redis
     volumes:
-     - .:/code
+     - ./backend:/code
