@@ -6,3 +6,4 @@ REDIS_PORT = 6379
 REDIS_DB = 0
 TASK_QUEUE_NAME = "tasks"
 ELASTICSEARCH_HOSTS = ["elasticsearch:9200"]
+CARDS_INDEX_ALIAS = "cards"
