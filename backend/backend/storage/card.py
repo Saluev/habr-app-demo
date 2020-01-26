@@ -3,12 +3,14 @@ from typing import Iterable
 
 
 class Card(object):
-    def __init__(self, id: str = None, slug: str = None, name: str = None, markdown: str = None, html: str = None):
+    def __init__(self, id: str = None, slug: str = None, name: str = None, markdown: str = None, html: str = None,
+                 tags: Iterable[str] = ()):
         self.id = id
         self.slug = slug
         self.name = name
         self.markdown = markdown
         self.html = html
+        self.tags = list(tags)
 
 
 class CardDAO(object, metaclass=abc.ABCMeta):

@@ -20,7 +20,7 @@ create_or_update(Card(
     name="Hello, world!",
     markdown="""
 This is a hello-world page. It can't really compete with the [demo page](demo).
-"""))
+""", tags=["helloworld", "demo"]))
 
 create_or_update(Card(
     slug="demo",
@@ -29,5 +29,4 @@ create_or_update(Card(
 Hi there, habrovchanin. You've probably got here from the awkward ["Hello, world" card](helloworld).
 
 Well, **good news**! Finally you are looking at a **really cool card**!
-"""
-))
+""", tags=["habr", "demo"]))
