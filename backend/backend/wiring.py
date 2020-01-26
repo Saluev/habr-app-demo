@@ -1,5 +1,6 @@
 import os
 
+from elasticsearch import Elasticsearch
 from pymongo import MongoClient
 from pymongo.database import Database
 import redis
@@ -32,3 +33,5 @@ class Wiring(object):
         self.task_queue: rq.Queue = rq.Queue(
             name=self.settings.TASK_QUEUE_NAME,
             connection=self.redis)
+
+        self.elasticsearch_client = Elasticsearch(hosts=self.settings.ELASTICSEARCH_HOSTS)
