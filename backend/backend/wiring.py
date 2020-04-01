@@ -8,6 +8,8 @@ import redis
 
 import backend.dev_settings
 from backend.search.indexer import Indexer
+from backend.search.searcher import Searcher
+from backend.search.searcher_impl import ElasticsearchSearcher
 from backend.storage.card import CardDAO
 from backend.storage.card_impl import MongoCardDAO
 from backend.tasks.manager import TaskManager
@@ -38,3 +40,4 @@ class Wiring(object):
 
         self.elasticsearch_client = Elasticsearch(hosts=self.settings.ELASTICSEARCH_HOSTS)
         self.indexer = Indexer(self.elasticsearch_client, self.card_dao, self.settings.CARDS_INDEX_ALIAS)
+        self.searcher: Searcher = ElasticsearchSearcher(self.elasticsearch_client, self.settings.CARDS_INDEX_ALIAS)

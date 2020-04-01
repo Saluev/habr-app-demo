@@ -32,6 +32,10 @@ class CardDAO(object, metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
+    def get_by_ids(self, card_ids: Iterable[str]) -> Iterable[Card]:
+        pass
+
+    @abc.abstractmethod
     def get_by_slug(self, slug: str) -> Card:
         pass
 

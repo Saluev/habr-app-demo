@@ -21,6 +21,7 @@ class HabrAppDemo(flask.Flask):
         self.wiring = Wiring(env)
 
         self.route("/api/v1/card/<card_id_or_slug>")(self.card)
+        self.route("/api/v1/cards/search", methods=["POST"])(self.search_cards)
 
     def card(self, card_id_or_slug):
         try:
@@ -34,6 +35,23 @@ class HabrAppDemo(flask.Flask):
             k: v
             for k, v in card.__dict__.items()
             if v is not None
+        })
+
+    def search_cards(self):
+        request = flask.request.json
+        search_result = self.wiring.searcher.search_cards(**request)
+        cards = self.wiring.card_dao.get_by_ids(search_result.card_ids)
+        return flask.jsonify({
+            "totalCount": search_result.total_count,
+            "cards": [
+                {
+                    "id": card.id,
+                    "slug": card.slug,
+                    "name": card.name,
+                    # We don't need all card fields, or the payload will be too large.
+                } for card in cards
+            ],
+            "nextCardOffset": search_result.next_card_offset,
         })
 
 

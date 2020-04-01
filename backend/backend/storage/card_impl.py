@@ -53,6 +53,15 @@ class MongoCardDAO(CardDAO):
         except bson.errors.InvalidId:
             raise ValueError
 
+    def get_by_ids(self, card_ids: Iterable[str]) -> Iterable[Card]:
+        ids = list(map(bson.ObjectId, card_ids))
+        cards = self._find_by_query({"_id": {"$in": ids}})
+        card_by_id = {card.id: card for card in cards}
+        try:
+            return [card_by_id[str(id)] for id in ids]
+        except KeyError:
+            raise CardNotFound()
+
     def get_by_slug(self, slug: str) -> Card:
         return self._get_by_query({"slug": slug})
 
@@ -61,3 +70,6 @@ class MongoCardDAO(CardDAO):
         if document is None:
             raise CardNotFound()
         return self.from_bson(document)
+
+    def _find_by_query(self, query) -> Iterable[Card]:
+        return map(self.from_bson, self.collection.find(query))
