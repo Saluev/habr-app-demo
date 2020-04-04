@@ -3,4 +3,4 @@ COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 ADD . /code
 WORKDIR /code
-CMD python -m worker
+CMD python -m worker --loglevel=INFO

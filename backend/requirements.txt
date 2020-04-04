@@ -1,3 +1,4 @@
+celery>=4.2.0,<5.0.0
 flask
 flask-cors
 gevent
@@ -5,5 +6,4 @@ gunicorn
 mistune
 pymongo
 redis
-rq
 elasticsearch>=7.0.0,<8.0.0

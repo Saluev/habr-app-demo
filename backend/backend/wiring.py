@@ -1,10 +1,10 @@
 import os
 
+from celery import Celery
 from elasticsearch import Elasticsearch
 from pymongo import MongoClient
 from pymongo.database import Database
 import redis
-import rq
 
 import backend.dev_settings
 from backend.search.indexer import Indexer
@@ -32,10 +32,9 @@ class Wiring(object):
             host=self.settings.REDIS_HOST,
             port=self.settings.REDIS_PORT,
             db=self.settings.REDIS_DB)
-        self.task_queue: rq.Queue = rq.Queue(
-            name=self.settings.TASK_QUEUE_NAME,
-            connection=self.redis)
-        self.task_manager = TaskManager(self.task_queue)
+        self.celery_app = Celery("habr-app-demo-worker",
+            broker=f"redis://{self.settings.REDIS_HOST}:{self.settings.REDIS_PORT}")
+        self.task_manager = TaskManager(self.celery_app)
 
         self.elasticsearch_client = Elasticsearch(hosts=self.settings.ELASTICSEARCH_HOSTS)
         self.indexer = Indexer(self.elasticsearch_client, self.card_dao, self.settings.CARDS_INDEX_ALIAS)
