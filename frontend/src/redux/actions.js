@@ -6,6 +6,8 @@ export const ADD_PROMISE = "ADD_PROMISE";
 export const REMOVE_PROMISE = "REMOVE_PROMISE";
 export const START_FETCHING_CARD = "START_FETCHING_CARD";
 export const FINISH_FETCHING_CARD = "FINISH_FETCHING_CARD";
+export const START_FETCHING_SEARCH_RESULTS = "START_FETCHING_SEARCH_RESULTS";
+export const FINISH_FETCHING_SEARCH_RESULTS = "FINISH_FETCHING_SEARCH_RESULTS";
 export const NAVIGATE = "NAVIGATE";
 
 function apiPath() {
@@ -65,15 +67,72 @@ export function fetchCardIfNeeded() {
     };
 }
 
+function startFetchingSearchResults() {
+    return {
+        type: START_FETCHING_SEARCH_RESULTS
+    };
+}
+
+function finishFetchingSearchResults(json, query, offset) {
+    return {
+        type: FINISH_FETCHING_SEARCH_RESULTS,
+        searchResults: {
+            query: query,
+            offset: offset,
+            ...json
+        }
+    };
+}
+
+function fetchSearchResults() {
+    return (dispatch, getState) => {
+        dispatch(startFetchingSearchResults());
+        let state = getState();
+        let query = state.page.query;
+        let offset = state.page.offset;
+        let url = apiPath() + "/cards/search";
+        let promise = fetch(url, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "query": query,
+                "offset": offset,
+            })
+        }, dispatch, getState)
+            .then(response => response.json())
+            .then(json => {
+                dispatch(finishFetchingSearchResults(json, query, offset));
+                dispatch(removePromise(promise));
+            });
+        return dispatch(addPromise(promise));
+    };
+}
+
+export function fetchSearchResultsIfNeeded() {
+    return (dispatch, getState) => {
+        let state = getState().page;
+        let query = state.query;
+        let offset = state.offset;
+        if (state.searchResults === undefined || state.searchResults.query !== query || state.searchResults.offset !== offset) {
+            return dispatch(fetchSearchResults());
+        }
+    }
+}
+
 export function navigate(link, dontPushState) {
     if (!isServerSide() && !dontPushState) {
         history.pushState({
             pathname: link.pathname,
-            href: link.href
+            href: link.href,
+            search: link.search
         }, "", link.href);
     }
     return {
         type: NAVIGATE,
-        path: link.pathname
+        pathname: link.pathname,
+        search: link.search,
     }
 }

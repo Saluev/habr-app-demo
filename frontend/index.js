@@ -15,7 +15,8 @@ app.get("*", (req, res) => {
         cookie: req.headers.cookie,
         cookieToSet: [],
     };
-    render(initialState, {pathname: req.url}).then(result => {
+    let params = "?" + Object.keys(req.query).map(key => key + "=" + encodeURIComponent(req.query[key])).join("&");
+    render(initialState, {href: req.url, pathname: req.path, search: params}).then(result => {
         const {content, preloadedState} = result;
         const response = template("Habr demo app", preloadedState, content);
         const cookieToSet = preloadedState.cookieToSet;

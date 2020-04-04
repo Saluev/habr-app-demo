@@ -3,13 +3,16 @@ import {connect} from "react-redux";
 
 import CardPage from "./cardPage"
 import {navigate} from "../redux/actions";
+import SearchForm from "./searchForm";
+import SearchPage from "./searchPage";
 
 class App extends Component {
 
     componentDidMount() {
         history.replaceState({
             pathname: location.pathname,
-            href: location.href
+            href: location.href,
+            search: location.search
         }, "");
         window.addEventListener("popstate", event => this.navigate(event));
     }
@@ -26,7 +29,9 @@ class App extends Component {
         const {pageType} = this.props;
         return (
             <div>
+                <SearchForm/>
                 {pageType === "card" && <CardPage/>}
+                {pageType === "search" && <SearchPage/>}
             </div>
         );
     }

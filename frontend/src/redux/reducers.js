@@ -3,11 +3,12 @@ import {
     REMOVE_PROMISE,
     START_FETCHING_CARD,
     FINISH_FETCHING_CARD,
-    NAVIGATE, SET_COOKIE
+    NAVIGATE, SET_COOKIE, START_FETCHING_SEARCH_RESULTS, FINISH_FETCHING_SEARCH_RESULTS
 } from "./actions";
+import {parseQueryParams} from "../utility";
 
-function navigate(state, path) {
-    let m = /^\/card\/([^/]+)$/.exec(path);
+function navigate(state, link) {
+    let m = /^\/card\/([^/]+)$/.exec(link.pathname);
     if (m !== null) {
         return {
             ...state,
@@ -15,6 +16,18 @@ function navigate(state, path) {
                 type: "card",
                 cardSlug: m[1],
                 isFetching: true
+            }
+        };
+    }
+    if (link.pathname === "/search") {
+        let params = parseQueryParams(link.search || "");
+        return {
+            ...state,
+            page: {
+                type: "search",
+                query: params.query || "",
+                offset: parseInt(params.offset || "0"),
+                isFetching: true,
             }
         };
     }
@@ -50,8 +63,25 @@ export default function root(state = {}, action) {
                     cardData: action.cardData
                 }
             };
+        case START_FETCHING_SEARCH_RESULTS:
+            return {
+                ...state,
+                page: {
+                    ...state.page,
+                    isFetching: true
+                }
+            };
+        case FINISH_FETCHING_SEARCH_RESULTS:
+            return {
+                ...state,
+                page: {
+                    ...state.page,
+                    isFetching: false,
+                    searchResults: action.searchResults
+                }
+            };
         case NAVIGATE:
-            return navigate(state, action.path);
+            return navigate(state, action);
 
         case SET_COOKIE:
             // This is a very, very bad way to handle cookies on server-side.
