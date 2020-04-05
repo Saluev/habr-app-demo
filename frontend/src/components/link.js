@@ -1,10 +1,14 @@
 import React, {Component} from "react"
 import {connect} from "react-redux";
 import {navigate} from "../redux/actions";
+import {shouldOpenLinkInNewTab} from "../utility";
 
 class Link extends Component {
 
     navigate(event) {
+        if (shouldOpenLinkInNewTab(event.nativeEvent)){
+            return;
+        }
         event.preventDefault();
         this.props.dispatch(navigate(event.target));
     }

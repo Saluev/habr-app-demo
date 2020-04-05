@@ -18,3 +18,14 @@ export function parseQueryParams(params) {
             return result
         }, {});
 }
+
+export function shouldOpenLinkInNewTab(nativeEvent) {
+    // Does user want to open link in a new tab?
+    // https://stackoverflow.com/a/20087506/999858
+    return (
+        nativeEvent.ctrlKey ||
+        nativeEvent.shiftKey ||
+        nativeEvent.metaKey ||
+        (nativeEvent.button && nativeEvent.button === 1)
+    );
+}
