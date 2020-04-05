@@ -17,14 +17,14 @@ class ElasticsearchSearcher(Searcher):
         self.cards_index_name = cards_index_name
 
     def search_cards(self, query: str = "", count: int = 20, offset: int = 0,
-                     tags: Optional[Iterable[str]] = None) -> CardSearchResult:
+                     tags: Optional[Iterable[str]] = None, ids: Optional[Iterable[str]] = None) -> CardSearchResult:
         result = self.elasticsearch_client.search(index=self.cards_index_name, body={
             "size": count,
             "from": offset,
             "query": {
                 "bool": {
                     "must": self._make_text_queries(query),
-                    "filter": self._make_filter_queries(tags),
+                    "filter": list(self._make_filter_queries(tags, ids)),
                 }
             },
             "aggregations": {
@@ -45,14 +45,23 @@ class ElasticsearchSearcher(Searcher):
             tag_stats=tag_stats,
         )
 
-    def _make_filter_queries(self, tags: Optional[Iterable[str]] = None) -> List[ElasticsearchQuery]:
-        return [] if tags is None else [{
-            "term": {
-                "tags": {
-                    "value": tag
+    def _make_filter_queries(self, tags: Optional[Iterable[str]] = None,
+                             ids: Optional[Iterable[str]] = None) -> Iterable[ElasticsearchQuery]:
+        if tags is not None:
+            for tag in tags:
+                yield {
+                    "term": {
+                        "tags": {
+                            "value": tag
+                        }
+                    }
+                }
+        if ids is not None:
+            yield {
+                "terms": {
+                    "id": list(ids)
                 }
             }
-        } for tag in tags]
 
     def _make_text_queries(self, query: str) -> List[ElasticsearchQuery]:
         return [] if not query else [{

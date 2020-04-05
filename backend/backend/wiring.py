@@ -9,6 +9,7 @@ import redis
 
 import backend.dev_settings
 from backend.search.features import CardFeaturesDAO, CardFeaturesManager
+from backend.search.ranking import SearchRankingManager
 from backend.search.features_impl import MongoCardFeaturesDAO
 from backend.search.indexer import Indexer
 from backend.search.searcher import Searcher
@@ -45,6 +46,8 @@ class Wiring(object):
         LTRClient.infect_client(self.elasticsearch_client)
         self.card_features_dao: CardFeaturesDAO = MongoCardFeaturesDAO(self.mongo_database)
         self.card_features_manager = CardFeaturesManager(self.card_features_dao)
+        self.search_ranking_manager = SearchRankingManager(
+            self.elasticsearch_client, self.card_features_manager, self.settings.CARDS_INDEX_ALIAS)
         self.indexer = Indexer(
             self.elasticsearch_client, self.card_dao, self.card_features_manager, self.settings.CARDS_INDEX_ALIAS)
         self.searcher: Searcher = ElasticsearchSearcher(self.elasticsearch_client, self.settings.CARDS_INDEX_ALIAS)

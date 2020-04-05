@@ -21,5 +21,5 @@ class Searcher(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def search_cards(self, query: str = "", count: int = 20, offset: int = 0,
-                     tags: Optional[Iterable[str]] = None) -> CardSearchResult:
+                     tags: Optional[Iterable[str]] = None, ids: Optional[Iterable[str]] = None) -> CardSearchResult:
         pass

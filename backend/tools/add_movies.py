@@ -1,8 +1,11 @@
-# Usage:
-#   docker-compose exec -T backend python -m tools.add_movies < ~/Downloads/tmdb-movie-metadata/tmdb_5000_movies.csv
-#
-# The dataset can be found at
-#   https://www.kaggle.com/tmdb/tmdb-movie-metadata
+"""
+Usage:
+
+    docker-compose exec -T backend python -m tools.add_movies < ~/Downloads/tmdb-movie-metadata/tmdb_5000_movies.csv
+
+The dataset can be found at
+    https://www.kaggle.com/tmdb/tmdb-movie-metadata
+"""
 
 import csv
 import json
