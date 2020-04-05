@@ -7,3 +7,4 @@ mistune
 pymongo
 redis
 elasticsearch>=7.0.0,<8.0.0
+elasticsearch_ltr
