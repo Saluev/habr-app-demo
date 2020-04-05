@@ -29,3 +29,13 @@ export function shouldOpenLinkInNewTab(nativeEvent) {
         (nativeEvent.button && nativeEvent.button === 1)
     );
 }
+
+export function areSameStringArrays(a, b) {
+    if (a === null || b === null) {
+        return (a === null) === (b === null);
+    }
+    if (a.length !== b.length) {
+        return false;
+    }
+    return a.every((aElem, idx) => aElem === b[idx]);
+}

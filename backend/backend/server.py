@@ -52,6 +52,13 @@ class HabrAppDemo(flask.Flask):
                 } for card in cards
             ],
             "nextCardOffset": search_result.next_card_offset,
+            "tagStats": [
+                {
+                    "tag": stats.tag,
+                    "cardCount": stats.cards_count,
+                }
+                for stats in search_result.tag_stats
+            ]
         })
 
 

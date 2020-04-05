@@ -1,4 +1,4 @@
-import {isServerSide} from "../utility";
+import {areSameStringArrays, isServerSide} from "../utility";
 import fetch from "./fetch";
 
 export const SET_COOKIE = "SET_COOKIE";
@@ -73,12 +73,13 @@ function startFetchingSearchResults() {
     };
 }
 
-function finishFetchingSearchResults(json, query, offset) {
+function finishFetchingSearchResults(json, query, offset, tags) {
     return {
         type: FINISH_FETCHING_SEARCH_RESULTS,
         searchResults: {
             query: query,
             offset: offset,
+            tags: tags,
             ...json
         }
     };
@@ -90,6 +91,7 @@ function fetchSearchResults() {
         let state = getState();
         let query = state.page.query;
         let offset = state.page.offset;
+        let tags = state.page.tags;
         let url = apiPath() + "/cards/search";
         let promise = fetch(url, {
             method: "POST",
@@ -100,11 +102,12 @@ function fetchSearchResults() {
             body: JSON.stringify({
                 "query": query,
                 "offset": offset,
+                "tags": tags,
             })
         }, dispatch, getState)
             .then(response => response.json())
             .then(json => {
-                dispatch(finishFetchingSearchResults(json, query, offset));
+                dispatch(finishFetchingSearchResults(json, query, offset, tags));
                 dispatch(removePromise(promise));
             });
         return dispatch(addPromise(promise));
@@ -116,7 +119,11 @@ export function fetchSearchResultsIfNeeded() {
         let state = getState().page;
         let query = state.query;
         let offset = state.offset;
-        if (state.searchResults === undefined || state.searchResults.query !== query || state.searchResults.offset !== offset) {
+        let tags = state.tags;
+        if (state.searchResults === undefined ||
+            state.searchResults.query !== query ||
+            state.searchResults.offset !== offset ||
+            !areSameStringArrays(state.searchResults.tags, tags)) {
             return dispatch(fetchSearchResults());
         }
     }

@@ -27,6 +27,7 @@ function navigate(state, link) {
                 type: "search",
                 query: params.query || "",
                 offset: parseInt(params.offset || "0"),
+                tags: params.tags && params.tags.split(",").sort() || null,
                 isFetching: true,
             }
         };
