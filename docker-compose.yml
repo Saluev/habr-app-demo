@@ -8,8 +8,12 @@ services:
     image: "elasticsearch:7.5.1"
     environment:
       - discovery.type=single-node
+  kibana:
+    image: "kibana:7.5.1"
     ports:
-      - "9200:9200"
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
   backend:
     build:
       context: backend
