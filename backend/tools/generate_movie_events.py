@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
     for query in queries:
         depth = random.randint(args.min_depth, args.max_depth)
-        search_result = wiring.searcher.search_cards(query, count=depth)
+        search_result = wiring.searcher.search_cards(query, count=depth, enable_rescoring=False)
         found_card_ids = list(search_result.card_ids)
         actual_depth = len(found_card_ids)
         for position, card_id in enumerate(found_card_ids):

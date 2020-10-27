@@ -2,6 +2,7 @@ from typing import Any, Optional, Iterable, List
 
 from elasticsearch import Elasticsearch
 
+from backend.search.ranking import SearchRankingManager
 from backend.search.searcher import CardSearchResult, Searcher, TagStats
 
 
@@ -12,12 +13,30 @@ class ElasticsearchSearcher(Searcher):
 
     TAGS_AGGREGATION_NAME = "tags_aggregation"
 
-    def __init__(self, elasticsearch_client: Elasticsearch, cards_index_name: str):
+    def __init__(self, elasticsearch_client: Elasticsearch, ranking_manager: SearchRankingManager,
+                 cards_index_name: str):
         self.elasticsearch_client = elasticsearch_client
+        self.ranking_manager = ranking_manager
         self.cards_index_name = cards_index_name
 
     def search_cards(self, query: str = "", count: int = 20, offset: int = 0,
-                     tags: Optional[Iterable[str]] = None, ids: Optional[Iterable[str]] = None) -> CardSearchResult:
+                     tags: Optional[Iterable[str]] = None, ids: Optional[Iterable[str]] = None,
+                     enable_rescoring=True) -> CardSearchResult:
+        rescoring = {
+            "rescore": {
+                "window_size": 1000,
+                "query": {
+                    "rescore_query": {
+                        "sltr": {
+                            "params": {
+                                "query": query
+                            },
+                            "model": self.ranking_manager.get_current_model_name()
+                        }
+                    }
+                }
+            }
+        } if enable_rescoring else {}
         result = self.elasticsearch_client.search(index=self.cards_index_name, body={
             "size": count,
             "from": offset,
@@ -27,6 +46,7 @@ class ElasticsearchSearcher(Searcher):
                     "filter": list(self._make_filter_queries(tags, ids)),
                 }
             },
+            **rescoring,
             "aggregations": {
                 self.TAGS_AGGREGATION_NAME: {
                     "terms": {"field": "tags"}

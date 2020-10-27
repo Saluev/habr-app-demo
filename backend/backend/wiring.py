@@ -50,4 +50,5 @@ class Wiring(object):
             self.elasticsearch_client, self.card_features_manager, self.settings.CARDS_INDEX_ALIAS)
         self.indexer = Indexer(
             self.elasticsearch_client, self.card_dao, self.card_features_manager, self.settings.CARDS_INDEX_ALIAS)
-        self.searcher: Searcher = ElasticsearchSearcher(self.elasticsearch_client, self.settings.CARDS_INDEX_ALIAS)
+        self.searcher: Searcher = ElasticsearchSearcher(
+            self.elasticsearch_client, self.search_ranking_manager, self.settings.CARDS_INDEX_ALIAS)

@@ -1,6 +1,6 @@
 from typing import Iterable, List, Mapping
 
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, NotFoundError
 from elasticsearch_ltr import LTRClient
 
 from backend.search.features import CardFeaturesManager
@@ -9,6 +9,7 @@ from backend.search.features import CardFeaturesManager
 class SearchRankingManager:
 
     DEFAULT_FEATURE_SET_NAME = "card_features"
+    DEFAULT_MODEL_NAME = "card_model"
 
     def __init__(self, elasticsearch_client: Elasticsearch, card_features_manager: CardFeaturesManager,
                  cards_index_name: str):
@@ -98,6 +99,26 @@ class SearchRankingManager:
             hit["_id"]: [feature.get("value", float("nan")) for feature in hit["fields"]["_ltrlog"][0]["log_entry1"]]
             for hit in result["hits"]["hits"]
         }
+
+    def upload_xgboost_model(self, model_json,
+                             model_name=DEFAULT_MODEL_NAME, feature_set_name=DEFAULT_FEATURE_SET_NAME):
+        ltr: LTRClient = self.elasticsearch_client.ltr
+        try:
+            ltr.delete_model(model_name)
+        except NotFoundError:
+            pass
+        ltr.create_model(model_name, {
+            "model": {
+                "name": model_name,
+                "model": {
+                    "type": "model/xgboost+json",
+                    "definition": model_json,
+                }
+            }
+        }, feature_set_name)
+
+    def get_current_model_name(self):
+        return self.DEFAULT_MODEL_NAME
 
     @staticmethod
     def _make_feature(name, params, query):
