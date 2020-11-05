@@ -2,6 +2,8 @@
 
 App demo for [Habr article](https://habr.com/ru/post/444446/).
 
+For demo for the [second article about search](https://habr.com/ru/company/joom/blog/526550/), checkout `feature/search` branch.
+
 ## Running
 
     docker-compose up
