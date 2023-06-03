@@ -1,8 +1,8 @@
-flask
-flask-cors
-gevent
-gunicorn
-mistune
-pymongo
-redis
-rq
+Flask==2.2.5
+Flask-Cors==3.0.10
+gevent==22.10.2
+gunicorn==20.1.0
+mistune==2.0.5
+pymongo==4.3.3
+redis==4.5.5
+rq==1.15.0

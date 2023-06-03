@@ -11,4 +11,4 @@ def parse_card_markup(card_dao: CardDAO, card_id: str):
     card_dao.update(card)
 
 
-_parse_markdown = mistune.Markdown(escape=True, hard_wrap=False)
+_parse_markdown = mistune.create_markdown(escape=True, hard_wrap=False)

@@ -1,4 +1,4 @@
-FROM python:stretch
+FROM python:3.11.3-alpine3.18
 COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 ADD . /code
