@@ -10,7 +10,7 @@ export const NAVIGATE = "NAVIGATE";
 
 function apiPath() {
     if (isServerSide()) {
-        return "http://backend:40001/api/v1";
+        return `http://${process.env.APP_BACKEND_URL}/api/v1`;
     }
     return "http://localhost:40001/api/v1";
 }
