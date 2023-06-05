@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 services:
   mongo:
     image: "mongo:latest"
@@ -7,7 +7,8 @@ services:
   backend:
     build:
       context: backend
-      dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile
+      target: backend
     environment:
       - APP_ENV=dev
     depends_on:
@@ -34,7 +35,8 @@ services:
   worker:
     build:
       context: backend
-      dockerfile: Dockerfile.worker
+      dockerfile: Dockerfile
+      target: worker
     environment:
       - APP_ENV=dev
     depends_on:
