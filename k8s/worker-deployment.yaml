@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+  labels:
+    app: worker-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: worker-app
+  template:
+    metadata:
+      labels:
+        app: worker-app
+    spec:
+      containers:
+        - name: worker-container
+          image: docker.io/habr-app-demo/worker:latest
+          imagePullPolicy: Never
+          env:
+            - name: APP_ENV
+              value: k8s_secrets
+          volumeMounts:
+            - mountPath: "/run/secrets/mongodb"
+              name: mongodb-volume
+              readOnly: true
+      volumes:
+        - name: mongodb-volume
+          secret:
+            secretName: mongodb-secret
+            optional: false

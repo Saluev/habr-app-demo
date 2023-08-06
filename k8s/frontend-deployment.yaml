@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend-app
+  template:
+    metadata:
+      name: frontend-pod
+      labels:
+        app: frontend-app
+    spec:
+      containers:
+        - name: frontend-container
+          image: docker.io/habr-app-demo/frontend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 40002
+          env:
+            - name: APP_ENV
+              value: k8s
+            - name: APP_BACKEND_URL
+              value: backend-service.default.svc.cluster.local:40001
+            - name: APP_FRONTEND_PORT
+              value: "40002"

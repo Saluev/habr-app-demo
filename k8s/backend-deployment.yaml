@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+        - name: backend-container
+          image: docker.io/habr-app-demo/backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 40001
+  selector:
+    matchLabels:
+      app: backend-app

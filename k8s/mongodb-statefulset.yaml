@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb-statefulset
+spec:
+  serviceName: mongodb-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb-app
+    spec:
+      containers:
+        - name: mongodb-container
+          image: mongo:6.0.6
+          ports:
+            - containerPort: 27017
+              name: mongodb-cli
+          volumeMounts:
+            - mountPath: "/data/db"
+              name: mongodb-pvc
+  selector:
+    matchLabels:
+      app: mongodb-app
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Mi

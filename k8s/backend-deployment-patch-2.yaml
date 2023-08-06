@@ -1,0 +1,17 @@
+spec:
+  template:
+    spec:
+      containers:
+        - name: backend-container
+          env:
+            - name: APP_ENV
+              value: k8s_secret
+          volumeMounts:
+            - mountPath: "/run/secrets/mongodb"
+              name: mongodb-secret-volume
+              readOnly: true
+      volumes:
+        - name: mongodb-secret-volume
+          secret:
+            secretName: mongodb-secret
+            optional: false

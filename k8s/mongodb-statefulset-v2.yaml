@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb-statefulset
+spec:
+  serviceName: mongodb-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb-app
+    spec:
+      containers:
+        - name: mongodb-container
+          image: mongo:6.0.6
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: root
+            - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+              value: "/run/secrets/mongodb/password.txt"
+          ports:
+            - containerPort: 27017
+              name: mongodb-cli
+          volumeMounts:
+            - mountPath: "/data/db"
+              name: mongodb-pvc
+            - mountPath: "/run/secrets/mongodb"
+              name: mongodb-secret-volume
+              readOnly: true
+      volumes:
+      - name: mongodb-secret-volume
+        secret:
+          secretName: mongodb-secret
+          optional: false
+  selector:
+    matchLabels:
+      app: mongodb-app
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Mi
