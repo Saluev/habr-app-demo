@@ -29,7 +29,7 @@ class Wiring(object):
                 mongo_password = f.read()
             mongo_auth = f"{self.settings.MONGO_USER}:{mongo_password}@"
         mongo_uri = f"mongodb://{mongo_auth}{self.settings.MONGO_HOST}:{self.settings.MONGO_PORT}/"
-        self.mongo_client: MongoClient = MongoClient(mongo_uri)
+        self.mongo_client: MongoClient = MongoClient(mongo_uri, serverSelectionTimeoutMS=1000)
         self.mongo_database: Database = self.mongo_client[self.settings.MONGO_DATABASE]
         self.card_dao: CardDAO = MongoCardDAO(self.mongo_database)
 
