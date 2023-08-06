@@ -12,7 +12,7 @@ function apiPath() {
     if (isServerSide()) {
         return `http://${process.env.APP_BACKEND_URL}/api/v1`;
     }
-    return "http://localhost:40001/api/v1";
+    return "http://backend.localhost/api/v1";
 }
 
 function addPromise(promise) {
