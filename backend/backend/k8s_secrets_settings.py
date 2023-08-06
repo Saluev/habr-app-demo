@@ -1,0 +1,9 @@
+MONGO_HOST = "mongodb-statefulset-0.mongodb-service.default.svc.cluster.local"
+MONGO_PORT = 27017
+MONGO_DATABASE = "core"
+MONGO_USER = "root"
+MONGO_PASSWORD_PATH = "/run/secrets/mongodb/password.txt"
+REDIS_HOST = "redis-statefulset-0.redis-service.default.svc.cluster.local"
+REDIS_PORT = 6379
+REDIS_DB = 0
+TASK_QUEUE_NAME = "tasks"

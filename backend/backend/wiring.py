@@ -6,6 +6,7 @@ import redis
 import rq
 
 import backend.dev_settings
+import backend.k8s_secrets_settings
 import backend.k8s_settings
 from backend.storage.card import CardDAO
 from backend.storage.card_impl import MongoCardDAO
@@ -19,6 +20,7 @@ class Wiring(object):
         self.settings = {
             "dev": backend.dev_settings,
             "k8s": backend.k8s_settings,
+            "k8s_secrets": backend.k8s_secrets_settings,
         }[env]
 
         mongo_auth = ""
