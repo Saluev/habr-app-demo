@@ -5,7 +5,7 @@ spec:
         - name: backend-container
           env:
             - name: APP_ENV
-              value: k8s_secret
+              value: k8s_secrets
           volumeMounts:
             - mountPath: "/run/secrets/mongodb"
               name: mongodb-secret-volume

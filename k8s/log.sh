@@ -17,17 +17,17 @@ EOF
 (eval $(minikube docker-env) && docker build -t habr-app-demo/frontend:latest frontend)
 
 kubectl apply -f k8s/backend-deployment.yaml
+
 kubectl apply -f k8s/mongodb-statefulset.yaml
 kubectl apply -f k8s/mongodb-service.yaml
 kubectl patch deployment backend-deployment --patch-file k8s/backend-deployment-patch.yaml
 
-(openssl rand -base64 14 > password.txt &&
+(echo -n $(openssl rand -hex 14) > password.txt &&
  kubectl create secret generic mongodb-secret --from-file password.txt &&
  rm password.txt)
 
 kubectl delete statefulset mongodb-statefulset
 kubectl delete pvc mongodb-pvc-mongodb-statefulset-0
-kubectl delete persistentvolume $(kubectl get --no-headers persistentvolumes | cut "-d " -f1)
 
 kubectl apply -f k8s/mongodb-statefulset-v2.yaml
 kubectl patch deployment backend-deployment --patch-file k8s/backend-deployment-patch-2.yaml

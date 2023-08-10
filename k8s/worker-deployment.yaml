@@ -23,10 +23,10 @@ spec:
               value: k8s_secrets
           volumeMounts:
             - mountPath: "/run/secrets/mongodb"
-              name: mongodb-volume
+              name: mongodb-secret-volume
               readOnly: true
       volumes:
-        - name: mongodb-volume
+        - name: mongodb-secret-volume
           secret:
             secretName: mongodb-secret
             optional: false
