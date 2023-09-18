@@ -4,6 +4,8 @@ App demo for the [original Habr article](https://habr.com/ru/post/444446/).
 
 For demo for the [second article about search](https://habr.com/ru/company/joom/blog/526550/), checkout `feature/search` branch.
 
+For demo for the [third article about Kubernetes](https://habr.com/ru/articles/752586/), checkout `feature/k8s` branch.
+
 ## Running
 
     docker-compose up
